@@ -22,6 +22,7 @@ class InvitationTest extends TestCase
         $kouadio = $this->compte('Kouadio');
         $awa = $this->compte('Awa');
         $this->postJson('/api/inscription', ['pseudo' => 'kouadio', 'mot_de_passe' => 'secret123'])->assertStatus(422);
+        $this->postJson('/api/inscription', [])->assertStatus(422)->assertJsonPath('message', 'Choisis un pseudo. (and 1 more error)');
         $this->postJson('/api/connexion', ['pseudo' => 'Awa', 'mot_de_passe' => 'faux'])->assertStatus(401);
         $this->postJson('/api/connexion', ['pseudo' => 'Awa', 'mot_de_passe' => 'secret123'])->assertOk();
 
@@ -39,7 +40,7 @@ class InvitationTest extends TestCase
         // invitation puis refus
         $this->en($kouadio)->putJson('/api/appareil', ['fcm_token' => null])->assertOk();
         $inv = $this->en($kouadio)->postJson('/api/invitations', ['pseudo' => 'Awa', 'mode' => 'coop', 'code' => 'abc123', 'libelle' => 'Gbaka · Adjamé'])
-            ->assertCreated()->assertJsonPath('notifiee', false)->json('invitation.id');
+            ->assertCreated()->assertJsonPath('notifiee', false)->assertJsonPath('invitation.etat', 'envoyee')->json('invitation.id');
         $this->app['auth']->forgetGuards();
         $this->en($awa)->getJson('/api/moi')->assertJsonPath('invitations.0.code', 'ABC123')->assertJsonPath('invitations.0.hote', 'Kouadio');
         $this->en($awa)->postJson("/api/invitations/$inv/reponse", ['reponse' => 'refuser'])->assertOk()->assertJsonPath('invitation.etat', 'refusee');

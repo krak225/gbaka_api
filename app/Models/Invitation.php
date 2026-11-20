@@ -34,7 +34,7 @@ class Invitation extends Model
             'code' => $this->code,
             'libelle' => $this->libelle,
             'etat' => $this->enAttente() || $this->etat !== 'envoyee' ? $this->etat : 'expiree',
-            'expire_dans' => max(0, now()->diffInSeconds($this->expire_le, false)),
+            'expire_dans' => (int) max(0, now()->diffInSeconds($this->expire_le, false)),
         ];
     }
 }

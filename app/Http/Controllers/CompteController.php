@@ -16,6 +16,8 @@ class CompteController extends Controller
             'pseudo' => [...self::PSEUDO, fn ($a, $v, $echec) => User::parPseudo($v) ? $echec('Ce pseudo est déjà pris.') : null],
             'mot_de_passe' => ['required', 'string', 'min:6', 'max:100'],
         ], [
+            'pseudo.required' => 'Choisis un pseudo.',
+            'mot_de_passe.required' => 'Choisis un mot de passe.',
             'pseudo.regex' => 'Lettres, chiffres, espaces, points et tirets seulement.',
             'pseudo.min' => 'Le pseudo doit avoir au moins 2 caractères.',
             'pseudo.max' => 'Le pseudo doit avoir au plus 16 caractères.',

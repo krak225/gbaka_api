@@ -26,7 +26,7 @@ class InvitationController extends Controller
         Invitation::where('hote_id', $u->id)->where('invite_id', $ami->id)->where('etat', 'envoyee')->update(['etat' => 'annulee']);
         $inv = Invitation::create([
             'hote_id' => $u->id, 'invite_id' => $ami->id, 'mode' => $d['mode'], 'code' => strtoupper($d['code']),
-            'libelle' => $d['libelle'] ?? null, 'expire_le' => now()->addMinutes(Invitation::DUREE_MINUTES),
+            'libelle' => $d['libelle'] ?? null, 'etat' => 'envoyee', 'expire_le' => now()->addMinutes(Invitation::DUREE_MINUTES),
         ]);
         $quoi = $d['mode'] === 'course' ? 'une course en ligne' : 'jouer à deux';
         $notifiee = Fcm::envoyer($ami, $u->pseudo . ' t\'invite', $u->pseudo . ' t\'invite à ' . $quoi
