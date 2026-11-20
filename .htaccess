@@ -1,0 +1,12 @@
+# Hébergement où la racine du domaine est le dossier du projet (et pas public/) :
+# toutes les requêtes passent par public/, les fichiers du projet (artisan, vendor, storage, .env…) ne sont plus servis.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# sans mod_rewrite : rien n'est servi plutôt que d'exposer le projet
+<IfModule !mod_rewrite.c>
+    Require all denied
+</IfModule>
