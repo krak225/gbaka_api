@@ -12,7 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // sans jeton (ex. adresse ouverte dans un navigateur) : 401 en JSON, pas de renvoi vers une page « login » qui
+        // n'existe pas (erreur 500 « Server Error »)
+        $middleware->redirectGuestsTo(fn ($request) => $request->is('api/*') ? null : '/');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // le jeu reçoit toujours du JSON (message lisible), jamais une page HTML
